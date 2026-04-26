@@ -1,100 +1,100 @@
-# DPL Classic & DPL-VU — Data Port Logics für Astromech-Droiden
+# DPL Classic & DPL-VU — Data Port Logics for Astromech droids
 
-**Printed-Droid Body-Lights-Platinen für R-Series Droiden (R2-D2 & Co.)**
-Firmware DPL Firmware_Nano-v1.1 · Hardware-Plattform Arduino Nano (ATmega328) · Doku 2.0.0 · Stand 2026-04-26
-
----
-
-## Danksagung
-
-Die DPL-Firmware basiert auf der hervorragenden **AstroCAN BodyLights**-Codebasis von **RealNobser** aus der R2-Builders-Community. Ein großes Dankeschön an RealNobser für die Bereitstellung dieses leistungsstarken Codes — ohne sein Engagement wären die DPL Classic und DPL-VU Platinen so nicht möglich gewesen.
+**Printed-Droid Body-Lights boards for R-series droids (R2-D2 & co.)**
+Firmware DPL Firmware_Nano-v1.1 · Platform Arduino Nano (ATmega328) · Doc 2.0.0 · 2026-04-26
 
 ---
 
-## Was diese Doku abdeckt
+## Acknowledgements
 
-Diese Dokumentation richtet sich an User der Printed-Droid-Platinen **DPL Classic** und **DPL-VU**.
-Beide Platinen laufen mit der **gleichen Firmware** (`DPL Firmware_Nano-v1.1`). Der Unterschied liegt nur in der Bestückung:
-
-| Platine | Microcontroller | VU-LEDs auf Platine | Sound-reaktive Anzeige | Externe VU möglich |
-|---------|----------------|:--------------------:|:----------------------:|:------------------:|
-| **DPL Classic** | Arduino Nano on-board | nein (nicht bestückt) | nein (Default) | ja, separat erhältlich, an Pin D3 anlöten |
-| **DPL-VU** | Arduino Nano on-board | ja (28 WS2812B in 2× 14er-Reihen) | nein (siehe Hinweis im Handbuch) | — |
-
-Beide Platinen treiben:
-- **DPL** (Data Port Lights) — direkt auf der Platine
-- **CBI Plus** oder **D-CBI** (Charge Bay Indicator, separat erhältlich) — auf der Charge-Bay-Tür
-- **LDPL** (Large DataPanel Logics, separat erhältlich)
-- **UAL** (Utility Arm Lights, separat erhältlich)
-- **Voltage Monitor** mit 4 Schwellwerten (rot/gelb/grün/laden) — Anzeige über CBI
+The DPL firmware is based on the excellent **AstroCAN BodyLights** codebase by **RealNobser** from the R2 Builders community. A huge thanks to RealNobser for providing this powerful code — without his work the DPL Classic and DPL-VU boards would not be possible in their current form.
 
 ---
 
-## Schnelleinstieg
+## What this documentation covers
 
-1. **Platine an 5V anschließen** (USB-Kabel vom PC reicht aus — auch mit beiden CBI-Varianten gleichzeitig)
-2. **USB-Kabel an den on-board Arduino Nano stecken**
-3. **Firmware flashen** mit XLoader (Anleitung im Handbuch, Abschnitt "Firmware flashen")
-4. **Serielles Terminal öffnen** mit 115200 Baud, Zeilenende **CR** (nicht LF!)
-5. **Befehl absenden:** `/DP/BR/12` → DPL-Helligkeit auf 12
+This documentation is for users of the Printed-Droid **DPL Classic** and **DPL-VU** boards.
+Both boards run the **same firmware** (`DPL Firmware_Nano-v1.1`). The only difference is the assembly:
 
-Befehle, Animationen, Hardware-Anschlüsse, Pin-Belegung und Troubleshooting sind im Handbuch ausführlich beschrieben.
+| Board | Microcontroller | VU LEDs on board | Sound-reactive display | External VU possible |
+|-------|----------------|:----------------:|:----------------------:|:--------------------:|
+| **DPL Classic** | Arduino Nano on board | no (not populated) | no (default) | yes, available separately, soldered to D3 |
+| **DPL-VU** | Arduino Nano on board | yes (28 WS2812B in 2× 14-row layout) | no (see note in the manual) | — |
+
+Both boards drive:
+- **DPL** (Data Port Lights) — directly on the board
+- **CBI Plus** or **D-CBI** (Charge Bay Indicator, available separately) — on the charge-bay door
+- **LDPL** (Large DataPanel Logics, available separately)
+- **UAL** (Utility Arm Lights, available separately)
+- **Voltage Monitor** with 4 thresholds (red/yellow/green/charge) — display via CBI
 
 ---
 
-## Befehlsformat (Kurzfassung)
+## Quick start
+
+1. **Connect the board to 5V** (a USB cable from your PC is enough — even with both CBI variants connected at the same time)
+2. **Plug the USB cable into the on-board Arduino Nano**
+3. **Flash the firmware** with XLoader (instructions in the manual, section "Flashing the firmware")
+4. **Open a serial terminal** at 115200 baud, line ending **CR** (not LF!)
+5. **Send a command:** `/DP/BR/12` → DPL brightness 12
+
+Commands, animations, hardware connections, pin map and troubleshooting are covered in detail in the manual.
+
+---
+
+## Command format (short version)
 
 ```
-/MODUL/PARAMETER/WERT[/WERT2/WERT3...]
+/MODULE/PARAMETER/VALUE[/VALUE2/VALUE3...]
 ```
 
-**Module (Tokens):** `DP` `CB` `DC` `LD` `UA` `VU` · plus DPL-Sub-Bereiche `TB` `BL` `BG` `RL` `WL`
-**Parameter:** `BR` (Helligkeit) · `AN` (Animation) · `AS` (Animation-Speed ms) · `CO` (RGB-Farbe) · `VM` (Voltage Monitor an/aus) · `VL` (Voltage-Schwellen) · `RR` (Spannungsteiler-Widerstände)
-**System-Befehle:** `/RESTART` (Soft-Reboot) · `/FACTORY` (EEPROM-Defaults wiederherstellen)
+**Modules (tokens):** `DP` `CB` `DC` `LD` `UA` `VU` · plus DPL sub-areas `TB` `BL` `BG` `RL` `WL`
+**Parameters:** `BR` (brightness) · `AN` (animation) · `AS` (animation speed ms) · `CO` (RGB color) · `VM` (voltage monitor on/off) · `VL` (voltage thresholds) · `RR` (voltage divider resistors)
+**System commands:** `/RESTART` (soft reboot) · `/FACTORY` (restore EEPROM defaults)
 
 ```
-/DP/BR/15                       DPL Helligkeit 15 (Skala 0-15)
-/LD/BR/100                      LDPL Helligkeit 100 (Skala 0-255)
-/LD/CO/255/0/0                  LDPL Grundfarbe Rot
-/CB/AN/3                        CBI Heart-Animation
-/DC/AN/6                        D-CBI Rainbow
-/DP/VL/11.5/12.0/12.5/13.0      Voltage-Schwellen rot/gelb/grün/laden
+/DP/BR/15                       DPL brightness 15 (scale 0-15)
+/LD/BR/100                      LDPL brightness 100 (scale 0-255)
+/LD/CO/255/0/0                  LDPL base color red
+/CB/AN/3                        CBI heart animation
+/DC/AN/6                        D-CBI rainbow
+/DP/VL/11.5/12.0/12.5/13.0      Voltage thresholds red/yellow/green/charge
 ```
 
 ---
 
-## Variant-Auswahl-Hilfe
+## Variant decision guide
 
-**DPL Classic kaufen wenn:**
-- Standard-Funktion ohne VU-Anzeige reicht
-- VU-Effekte sind nicht gewünscht oder werden später optional nachgerüstet
+**Choose DPL Classic if:**
+- Standard function without VU display is enough
+- VU effects are not desired or will optionally be retrofitted later
 
-**DPL-VU kaufen wenn:**
-- Eine 28-LED VU-Anzeige im Data-Port von Anfang an gewünscht ist
-- Aufmerksamkeitsstarke Effekte (BPM-Sync, Juggle, VU-Meter) erwünscht sind
+**Choose DPL-VU if:**
+- A 28-LED VU display in the data port is desired from the start
+- Eye-catching effects (BPM sync, juggle, VU meter) are wanted
 
-**DPL Classic + externe VU-Platine** (nachträglich an D3 anlötbar): wenn man die VU später ergänzen möchte. Externe VU-Platine ist separat bei Printed-Droid erhältlich.
+**DPL Classic + external VU board** (can be soldered to D3 later): if you want to add VU later. The external VU board is sold separately by Printed-Droid.
 
 ---
 
-## Hardware-Quellen
+## Hardware sources
 
 - **Printed-Droid DPL Classic:** https://www.printed-droid.com/kb/dpl-classic-data-port-logics/
 - **Printed-Droid DPL-VU:** https://www.printed-droid.com/kb/data-port-logics-vu-dpl-vu/
-- **Original-Code (RealNobser):** AstroCAN BodyLights
+- **Original code (RealNobser):** AstroCAN BodyLights
 
 ---
 
-## Support & Hilfe
+## Support & help
 
-- **Shop / Produktseiten:** https://www.printed-droid.com
-- **Community / Facebook-Gruppe:** https://www.facebook.com/groups/printeddroid/
-- **GitHub-Repo:** https://github.com/PrintedDroid/DPL-VU_and_DPL-Classic
+- **Shop / product pages:** https://www.printed-droid.com
+- **Community / Facebook group:** https://www.facebook.com/groups/printeddroid/
+- **GitHub repo:** https://github.com/PrintedDroid/DPL-VU_and_DPL-Classic
 
 ---
 
-## Lizenz & Credits
+## License & credits
 
-- **Firmware:** DPL Firmware_Nano-v1.1 (basiert auf **AstroCAN BodyLights** von **RealNobser**, R2-Builders-Community) — die Original-Codebasis enthält keine eigene Lizenz-Datei; alle Rechte beim Original-Autor RealNobser
-- **Platinen-Design:** Printed-Droid (https://www.printed-droid.com)
-- **Diese Doku:** © Printed-Droid — **alle Rechte vorbehalten**. Keine Genehmigung zur kommerziellen Weiterverwendung, Vervielfältigung oder Bearbeitung ohne ausdrückliche Zustimmung.
+- **Firmware:** DPL Firmware_Nano-v1.1 (based on **AstroCAN BodyLights** by **RealNobser**, R2 Builders community) — the original codebase does not include a license file; all rights with the original author RealNobser
+- **Board design:** Printed-Droid (https://www.printed-droid.com)
+- **This documentation:** © Printed-Droid — **all rights reserved**. No permission granted for commercial reuse, duplication or modification without explicit consent.
