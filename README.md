@@ -3,6 +3,11 @@
 **Firmware and user manuals for the Printed-Droid DPL Classic and DPL-VU boards.**
 Body lights for R-series Astromech droids (R2-D2 & co.)
 
+## Wiki
+
+- D-DPL (DPL VU): <https://www.printed-droid.com/kb/data-port-logics-vu-dpl-vu/>
+- DPL Classic: <https://www.printed-droid.com/kb/dpl-classic-data-port-logics/>
+
 ---
 
 ## Quick start
